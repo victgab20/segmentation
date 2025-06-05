@@ -58,7 +58,7 @@ class SegmentacaoPorCanal(Dataset):
             img = augmented['image']
             mask = augmented['mask']
 
-        return img.unsqueeze(0), mask.unsqueeze(0)
+        return img, mask
 
     def __len__(self):
         return len(self.lista)
@@ -95,7 +95,7 @@ def treinar_modelo(model, loader_treino, loader_val, epocas=5):
         for x, y in loader_treino:
             x, y = x.to(DEVICE), y.to(DEVICE)
             out = model(x)
-            loss = bce(out, y)
+            loss = bce(out, y.unsqueeze(1))
             optim.zero_grad()
             loss.backward()
             optim.step()
